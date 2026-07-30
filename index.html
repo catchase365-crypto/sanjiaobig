@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>四面花蓉·九阶立体机械幻阵</title>
     <style>
+        :root {
+            --accent: #e0d0a0;
+        }
         body {
             margin: 0;
             padding: 0;
@@ -124,11 +127,30 @@
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            justify-content: center;
-            gap: 20px;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
             pointer-events: auto;
             z-index: 20;
-            padding: 15px 30px;
+            padding: 20px 30px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 20px;
+        }
+        .level-picker {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--accent);
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(224,208,160,0.3);
+        }
+        input[type=range] {
+            accent-color: var(--accent);
+            cursor: pointer;
+            width: 120px;
         }
         button {
             background: rgba(28, 37, 44, 0.7);
@@ -213,8 +235,11 @@
     </div>
 
     <div class="controls">
-        <button onclick="game.shuffle()">打乱</button>
-        <button onclick="game.reset()">复位</button>
+        <!-- 默认为高阶随机难度 -->
+        <div class="btn-group">
+            <button onclick="game.shuffle()" title="瞬间打乱" style="font-size: 20px;">🌀</button>
+            <button onclick="game.reset()" title="复位" style="font-size: 20px;">🔄</button>
+        </div>
     </div>
 
     <script>
@@ -744,40 +769,30 @@
 
             shuffle() {
                 if (this.isShuffling) return;
-                this.isShuffling = true;
                 document.getElementById('victory-overlay').classList.remove('show');
 
-                let count = 0;
-                const totalSteps = 60;
+                const totalSteps = 1000; // 默认极致复杂度打乱
                 let lastEmpty = -1;
 
-                const doStep = () => {
+                // 瞬间执行逻辑循环，不等待动画
+                for (let i = 0; i < totalSteps; i++) {
                     let emptyIdx = this.state.indexOf(4);
                     let neighbors = this.adj[emptyIdx].filter(n => n !== lastEmpty);
                     if (neighbors.length === 0) neighbors = this.adj[emptyIdx];
-
                     let randomNext = neighbors[Math.floor(Math.random() * neighbors.length)];
                     
-                    let targetBtn = this.buttons[randomNext];
-                    targetBtn.userData.isPressed = true;
-                    targetBtn.userData.animProgress = 0.0;
-                    
-                    targetBtn.userData.onPressPeak = () => {
-                        this.state[emptyIdx] = this.state[randomNext];
-                        this.state[randomNext] = 4;
-                        this.updateVisuals();
-                        
-                        lastEmpty = emptyIdx;
-                        count++;
+                    // 状态转换
+                    this.state[emptyIdx] = this.state[randomNext];
+                    this.state[randomNext] = 4;
+                    lastEmpty = emptyIdx;
+                }
 
-                        if (count < totalSteps) {
-                            setTimeout(doStep, 35);
-                        } else {
-                            this.isShuffling = false;
-                        }
-                    };
-                };
-                doStep();
+                this.updateVisuals();
+                
+                // 视觉上的“一气呵成”反馈：轻微晃动所有按钮
+                this.buttons.forEach(btn => {
+                    btn.userData.animProgress = 0.5;
+                });
             }
 
             reset() {
