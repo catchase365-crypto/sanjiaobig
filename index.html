@@ -408,7 +408,8 @@
                     yellow: new THREE.MeshStandardMaterial({ map: texYellow, bumpMap: texYellow, bumpScale: 0.01, roughness: 0.25, metalness: 0.1, emissive: 0x000000, envMap: envTexture, envMapIntensity: 0.4 }),
                     blue: new THREE.MeshStandardMaterial({ map: texBlue, bumpMap: texBlue, bumpScale: 0.01, roughness: 0.25, metalness: 0.1, emissive: 0x000000, envMap: envTexture, envMapIntensity: 0.4 }),
                     green: new THREE.MeshStandardMaterial({ map: texGreen, bumpMap: texGreen, bumpScale: 0.01, roughness: 0.25, metalness: 0.1, emissive: 0x000000, envMap: envTexture, envMapIntensity: 0.4 }),
-                    white: new THREE.MeshStandardMaterial({ map: texWhite, bumpMap: texWhite, bumpScale: 0.01, roughness: 0.2, metalness: 0.1, emissive: 0x000000, envMap: envTexture, envMapIntensity: 0.4 })
+                    white: new THREE.MeshStandardMaterial({ map: texWhite, bumpMap: texWhite, bumpScale: 0.01, roughness: 0.2, metalness: 0.1, emissive: 0x000000, envMap: envTexture, envMapIntensity: 0.4 }),
+                    aluminum: new THREE.MeshStandardMaterial({ color: 0x0c0f12, roughness: 0.2, metalness: 0.95, envMap: envTexture, envMapIntensity: 3.0 })
                 };
 
                 window.addEventListener('resize', () => {
@@ -539,6 +540,7 @@
                 // --- 生成36个小三角机械按钮 ---
                 this.buttons = [];
                 this.triangleVertices = []; // 存储未缩放的绝对顶点用于计算邻接图
+                this.diamonds = []; // 4面中心发光钻石组
 
                 const shrinkFactor = 0.90; // 块间距
                 const extrudeHeight = 0.08; // 按键浮出高度
@@ -548,6 +550,65 @@
                     let faceCenter = new THREE.Vector3().addVectors(A, B).add(C).divideScalar(3);
                     let N = new THREE.Vector3().crossVectors(new THREE.Vector3().subVectors(B, A), new THREE.Vector3().subVectors(C, A)).normalize();
                     if (N.dot(faceCenter) < 0) N.multiplyScalar(-1);
+
+                    // 在每个大面中心的留空区域镶嵌固定的多层六边形珠宝（严格中心对称、无旋转）
+                    const jewelryGroup = new THREE.Group();
+                    
+                    // 1. 宝石本体 (尺寸严格缩小 50%：半径与高度均减半)
+                    const gemBottomGeo = new THREE.CylinderGeometry(0.08, 0.01, 0.05, 6);
+                    const gemTopGeo = new THREE.CylinderGeometry(0.045, 0.08, 0.025, 6);
+                    gemTopGeo.translate(0, 0.0375, 0); 
+                    
+                    const gemMat = new THREE.MeshPhysicalMaterial({
+                        color: 0x000000, 
+                        emissive: 0x080015,
+                        emissiveIntensity: 0.4,
+                        roughness: 0.0,
+                        metalness: 0.9,
+                        flatShading: true,
+                        transmission: 0.0,
+                        ior: 2.4,
+                        clearcoat: 1.0,
+                        clearcoatRoughness: 0.0,
+                        reflectivity: 1.0,
+                        envMap: this.materials.base.envMap,
+                        envMapIntensity: 2.5
+                    });
+                    
+                    const gemBottom = new THREE.Mesh(gemBottomGeo, gemMat);
+                    const gemTop = new THREE.Mesh(gemTopGeo, gemMat);
+
+                    // 2. 柔和半透明深灰精致细线条（消除粗重刻意感）
+                    const edgeMat = new THREE.LineBasicMaterial({ 
+                        color: 0x11161d, 
+                        transparent: true, 
+                        opacity: 0.4 
+                    });
+                    const bottomEdges = new THREE.LineSegments(new THREE.EdgesGeometry(gemBottomGeo, 15), edgeMat);
+                    const topEdges = new THREE.LineSegments(new THREE.EdgesGeometry(gemTopGeo, 15), edgeMat);
+
+                    jewelryGroup.add(gemBottom);
+                    jewelryGroup.add(gemTop);
+                    jewelryGroup.add(bottomEdges);
+                    jewelryGroup.add(topEdges);
+                    
+// 镶爪已移除
+
+                    // 对齐到大面中心并贴合
+                    jewelryGroup.position.copy(faceCenter).addScaledVector(N, 0.02);
+                    jewelryGroup.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), N);
+                    
+                    // 绕自身Y轴(即表面法线)旋转30度，确保六边形的直边与周围的三角孔严格平行对称
+                    jewelryGroup.rotateY(Math.PI / 6); 
+
+                    jewelryGroup.userData = {
+                        phase: faceId * 1.57,
+                        colorSeed: faceId * 0.3,
+                        gemMeshes: [gemBottom, gemTop]
+                    };
+                    
+                    this.scene.add(jewelryGroup);
+                    this.diamonds.push(jewelryGroup);
 
                     // 获取大面进行3等分后的任意坐标点公式
                     const getP = (r, c) => {
@@ -636,10 +697,13 @@
                 }
 
                 const geometry = new THREE.BufferGeometry();
-                let verts = [];
-                let uvs = [];
+                const frameGeo = new THREE.BufferGeometry();
+                let verts = [], uvs = [];
+                let frameVerts = [];
                 let cSub_top = cSub.clone().addScaledVector(N, extrudeHeight);
                 let cSub_uv = new THREE.Vector2().addVectors(uvA, uvB).add(uvC).divideScalar(3);
+
+                const ringWidthRatio = 0.15;
 
                 for (let i = 0; i < loopPoints.length; i++) {
                     let p1 = loopPoints[i], p2 = loopPoints[(i + 1) % loopPoints.length];
@@ -647,23 +711,39 @@
                     let p1_top = p1.clone().addScaledVector(N, extrudeHeight);
                     let p2_top = p2.clone().addScaledVector(N, extrudeHeight);
 
-                    verts.push(cSub_top.x, cSub_top.y, cSub_top.z, p1_top.x, p1_top.y, p1_top.z, p2_top.x, p2_top.y, p2_top.z);
-                    uvs.push(cSub_uv.x, cSub_uv.y, u1.x, u1.y, u2.x, u2.y);
+                    let p1_in = p1_top.clone().lerp(cSub_top, ringWidthRatio);
+                    let p2_in = p2_top.clone().lerp(cSub_top, ringWidthRatio);
+                    let u1_in = u1.clone().lerp(cSub_uv, ringWidthRatio);
+                    let u2_in = u2.clone().lerp(cSub_uv, ringWidthRatio);
+
+                    verts.push(cSub_top.x, cSub_top.y, cSub_top.z, p1_in.x, p1_in.y, p1_in.z, p2_in.x, p2_in.y, p2_in.z);
+                    uvs.push(cSub_uv.x, cSub_uv.y, u1_in.x, u1_in.y, u2_in.x, u2_in.y);
 
                     verts.push(cSub.x, cSub.y, cSub.z, p2.x, p2.y, p2.z, p1.x, p1.y, p1.z);
                     uvs.push(cSub_uv.x, cSub_uv.y, u2.x, u2.y, u1.x, u1.y);
 
-                    verts.push(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, p2_top.x, p2_top.y, p2_top.z);
-                    uvs.push(0.1, 0.9, 0.1, 0.9, 0.1, 0.9);
-                    verts.push(p1.x, p1.y, p1.z, p2_top.x, p2_top.y, p2_top.z, p1_top.x, p1_top.y, p1_top.z);
-                    uvs.push(0.1, 0.9, 0.1, 0.9, 0.1, 0.9);
+                    let p1_top_out = p1_top.clone().addScaledVector(N, 0.002);
+                    let p2_top_out = p2_top.clone().addScaledVector(N, 0.002);
+                    let p1_in_out = p1_in.clone().addScaledVector(N, 0.002);
+                    let p2_in_out = p2_in.clone().addScaledVector(N, 0.002);
+
+                    frameVerts.push(p1_top_out.x, p1_top_out.y, p1_top_out.z, p2_top_out.x, p2_top_out.y, p2_top_out.z, p2_in_out.x, p2_in_out.y, p2_in_out.z);
+                    frameVerts.push(p1_top_out.x, p1_top_out.y, p1_top_out.z, p2_in_out.x, p2_in_out.y, p2_in_out.z, p1_in_out.x, p1_in_out.y, p1_in_out.z);
+
+                    frameVerts.push(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, p2_top.x, p2_top.y, p2_top.z);
+                    frameVerts.push(p1.x, p1.y, p1.z, p2_top.x, p2_top.y, p2_top.z, p1_top.x, p1_top.y, p1_top.z);
                 }
 
                 geometry.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
                 geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
                 geometry.computeVertexNormals();
 
+                frameGeo.setAttribute('position', new THREE.Float32BufferAttribute(frameVerts, 3));
+                frameGeo.computeVertexNormals();
+
                 const buttonMesh = new THREE.Mesh(geometry, this.materials.white);
+                const frameMesh = new THREE.Mesh(frameGeo, this.materials.aluminum);
+                buttonMesh.add(frameMesh);
                 
                 buttonMesh.userData = {
                     index: faceId * 9 + localIdx,
@@ -844,6 +924,23 @@
                     const offset = -maxPressDepth * btn.userData.animProgress;
                     btn.position.set(0, 0, 0).addScaledVector(btn.userData.normal, offset);
                 });
+
+                // 固定的多层珠宝：深邃高饱和暗夜幽光变色（深紫、翡翠深绿、血钻深红、深海蓝）
+                if (this.diamonds) {
+                    const time = Date.now() * 0.0008; 
+                    this.diamonds.forEach(group => {
+                        const pulse = Math.sin(time * 2.5 + group.userData.phase) * 0.5 + 0.5;
+                        const hue = (time * 0.06 + group.userData.colorSeed) % 1;
+                        
+                        group.userData.gemMeshes.forEach(mesh => {
+                            // 明度压低至 0.04，沉淀出重彩深色基底
+                            mesh.material.color.setHSL(hue, 1.0, 0.04);
+                            // 自发光明度锁定 0.15，保持由内而外的深邃幽光
+                            mesh.material.emissive.setHSL(hue, 1.0, 0.15);
+                            mesh.material.emissiveIntensity = 0.3 + pulse * 0.4;
+                        });
+                    });
+                }
 
                 this.renderer.render(this.scene, this.camera);
             }
