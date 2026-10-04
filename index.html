@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>四面花蓉·九阶立体机械幻阵</title>
+    <title>Catchase · 花蓉锁 (36键立体/平铺双形态)</title>
     <style>
         :root {
             --accent: #e0d0a0;
+            --accent-glow: rgba(224, 208, 160, 0.4);
         }
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
             background-color: #0c1013;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             user-select: none;
+            -webkit-user-select: none;
         }
 
-        /* 液态毛玻璃背景系统 */
+        /* 静态流体毛玻璃背景系统 */
         .liquid-bg {
             position: fixed;
             top: 0;
@@ -33,7 +35,7 @@
             border-radius: 50%;
             filter: blur(8vh);
             opacity: 0.5;
-            animation: float 12s infinite alternate ease-in-out;
+            animation: float 14s infinite alternate ease-in-out;
         }
         .circle-emerald { /* 祖母绿 - 左上 */
             background: #50C878;
@@ -63,17 +65,17 @@
             width: max(45vw, 45vh); height: max(45vw, 45vh);
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            animation: float-center 15s infinite alternate ease-in-out;
+            animation: float-center 16s infinite alternate ease-in-out;
             opacity: 0.35;
         }
 
         @keyframes float {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(8%, 8%) scale(1.15); }
+            100% { transform: translate(8%, 8%) scale(1.12); }
         }
         @keyframes float-center {
             0% { transform: translate(-50%, -50%) scale(1); }
-            100% { transform: translate(-45%, -45%) scale(1.2); }
+            100% { transform: translate(-45%, -45%) scale(1.18); }
         }
 
         #canvas-container {
@@ -87,92 +89,94 @@
         
         /* 毛玻璃 UI 面板 */
         #ui-panel, .controls, #victory-overlay .win-box {
-            background: rgba(20, 25, 30, 0.3);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            border-radius: 16px;
+            background: rgba(20, 25, 30, 0.38);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+            border-radius: 18px;
         }
         
         #ui-panel {
             position: absolute;
-            top: 20px;
+            top: 18px;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%;
-            max-width: 500px;
+            width: 88%;
+            max-width: 520px;
             text-align: center;
             color: #ffffff;
             pointer-events: none;
             z-index: 10;
-            padding: 15px 20px;
+            padding: 14px 22px;
         }
         h1 {
-            margin: 0 0 8px 0;
-            font-size: 24px;
+            margin: 0 0 6px 0;
+            font-size: 22px;
             letter-spacing: 2px;
-            color: #e0d0a0;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            color: var(--accent);
+            text-shadow: 0 2px 6px rgba(0,0,0,0.6);
         }
         p {
             margin: 0;
             font-size: 13px;
-            color: #b0c0d0;
+            color: #b0c2d6;
             line-height: 1.5;
         }
+        .mode-badge {
+            display: inline-block;
+            margin-top: 4px;
+            font-size: 11px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            background: rgba(224, 208, 160, 0.15);
+            color: var(--accent);
+            border: 1px solid rgba(224, 208, 160, 0.3);
+            letter-spacing: 1px;
+        }
+
         .controls {
             position: absolute;
-            bottom: 40px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 16px;
             pointer-events: auto;
             z-index: 20;
-            padding: 20px 30px;
-        }
-        .btn-group {
-            display: flex;
-            gap: 20px;
-        }
-        .level-picker {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--accent);
-            font-size: 14px;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(224,208,160,0.3);
-        }
-        input[type=range] {
-            accent-color: var(--accent);
-            cursor: pointer;
-            width: 120px;
+            padding: 12px 24px;
         }
         button {
-            background: rgba(28, 37, 44, 0.7);
-            color: #e0d0a0;
-            border: 1px solid #e0d0a0;
-            padding: 12px 24px;
+            background: rgba(28, 37, 44, 0.75);
+            color: var(--accent);
+            border: 1px solid rgba(224, 208, 160, 0.4);
+            padding: 10px 18px;
             font-size: 14px;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: bold;
+            transition: all 0.25s ease;
+            font-weight: 600;
             letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            outline: none;
         }
         button:hover {
-            background: #e0d0a0;
-            color: #1c252c;
+            background: var(--accent);
+            color: #12181f;
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(224, 208, 160, 0.4);
+            box-shadow: 0 4px 18px var(--accent-glow);
         }
         button:active {
-            transform: scale(0.95);
+            transform: scale(0.96);
         }
+        button.btn-primary {
+            background: rgba(224, 208, 160, 0.2);
+            border-color: var(--accent);
+        }
+
         #victory-overlay {
             position: absolute;
             top: 0;
@@ -186,8 +190,8 @@
             opacity: 0;
             transition: opacity 0.5s ease;
             z-index: 50;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(8px);
         }
         #victory-overlay.show {
             opacity: 1;
@@ -200,10 +204,10 @@
             align-items: center;
         }
         .win-text {
-            font-size: 42px;
+            font-size: 38px;
             font-weight: bold;
             color: #ffd700;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            text-shadow: 0 0 24px rgba(255, 215, 0, 0.65);
             margin-bottom: 25px;
             letter-spacing: 4px;
         }
@@ -213,6 +217,7 @@
 </head>
 <body>
 
+    <!-- 静态流态毛玻璃背景 -->
     <div class="liquid-bg">
         <div class="liquid-circle circle-emerald"></div>
         <div class="liquid-circle circle-violet"></div>
@@ -221,126 +226,130 @@
         <div class="liquid-circle circle-orange"></div>
     </div>
 
+    <!-- UI 面板 -->
     <div id="ui-panel">
         <h1>Catchase · 花蓉锁 (36键)</h1>
+        <p>四色四面·九阶滑动机械幻阵</p>
+        <span id="mode-badge" class="mode-badge">当前形态：三维正四面体</span>
     </div>
     
     <div id="canvas-container"></div>
 
     <div id="victory-overlay">
         <div class="win-box">
-            <div class="win-text">阵法已破 浑然天成</div>
-            <button onclick="game.shuffle()">再破一陈</button>
+            <div class="win-text">阵法已破 · 浑然天成</div>
+            <button onclick="game.shuffle()">再战一陈</button>
         </div>
     </div>
 
+    <!-- 操作底栏 -->
     <div class="controls">
-        <!-- 默认为高阶随机难度 -->
-        <div class="btn-group">
-            <button onclick="game.shuffle()" title="瞬间打乱" style="font-size: 20px;">🌀</button>
-            <button onclick="game.reset()" title="复位" style="font-size: 20px;">🔄</button>
-        </div>
+        <button id="toggle-view-btn" class="btn-primary" onclick="game.toggleMorph()">
+            <span id="toggle-icon">📐</span>
+            <span id="toggle-text">平铺展开</span>
+        </button>
+        <button onclick="game.shuffle()" title="瞬间打乱">
+            <span>🌀</span> 打乱
+        </button>
+        <button onclick="game.reset()" title="复位到初始完成态">
+            <span>🔄</span> 复位
+        </button>
     </div>
 
     <script>
+        // 材质纹理工厂：生成细腻的金丝花瓣与木纹质感
         const TextureFactory = {
             cache: {},
-            createWood(colorHex, isInner=false) {
-                const k = colorHex + (isInner?'_in':'_out');
-                if(this.cache[k]) return this.cache[k];
+            createWood(colorHex) {
+                if (this.cache[colorHex]) return this.cache[colorHex];
                 
-                const size = 512; const canvas = document.createElement('canvas'); canvas.width=size; canvas.height=size;
+                const size = 512;
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
                 const ctx = canvas.getContext('2d');
                 const col = new THREE.Color(colorHex);
                 
-                if(isInner) ctx.fillStyle = '#3a322e'; 
-                else ctx.fillStyle = `rgb(${col.r*180}, ${col.g*180}, ${col.b*180})`;
-                ctx.fillRect(0,0,size,size);
+                ctx.fillStyle = `rgb(${Math.round(col.r * 180)}, ${Math.round(col.g * 180)}, ${Math.round(col.b * 180)})`;
+                ctx.fillRect(0, 0, size, size);
                 
-                ctx.globalAlpha = 0.12; ctx.globalCompositeOperation = 'multiply';
-                for(let i=0;i<8000;i++) {
-                    ctx.fillStyle = Math.random()>0.5?'#000':'#4e342e';
-                    ctx.fillRect(Math.random()*size,Math.random()*size,Math.random()*60+20,2);
+                // 木质机理暗纹
+                ctx.globalAlpha = 0.12;
+                ctx.globalCompositeOperation = 'multiply';
+                for (let i = 0; i < 7000; i++) {
+                    ctx.fillStyle = Math.random() > 0.5 ? '#000' : '#4e342e';
+                    ctx.fillRect(Math.random() * size, Math.random() * size, Math.random() * 60 + 20, 2);
                 }
-                ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1.0;
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.globalAlpha = 1.0;
 
-                if(!isInner) {
-                    const grad = ctx.createRadialGradient(size/2,size/2,size*0.3,size/2,size/2,size*0.9);
-                    grad.addColorStop(0,'rgba(0,0,0,0)'); grad.addColorStop(1,'rgba(0,0,0,0.5)');
-                    ctx.fillStyle = grad; ctx.fillRect(0,0,size,size);
+                // 径向暗角
+                const grad = ctx.createRadialGradient(size / 2, size / 2, size * 0.3, size / 2, size / 2, size * 0.9);
+                grad.addColorStop(0, 'rgba(0,0,0,0)');
+                grad.addColorStop(1, 'rgba(0,0,0,0.5)');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, size, size);
+                
+                // 绘制经典花蓉金瓣纹样
+                const m = size / 2; 
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = 'rgba(255, 215, 0, 0.7)'; 
+                const totalPetals = 8;
+                
+                for (let i = 0; i < totalPetals; i++) {
+                    const angle = (i * 2 * Math.PI) / totalPetals + (i * 0.05);
+                    const maxReach = 82 + (i % 3) * 11; 
+                    const controlOffset = 52; 
                     
-                    const m = size / 2; 
-                    const rootY = m; 
-                    
-                    ctx.shadowBlur = 8;
-                    ctx.shadowColor = 'rgba(255, 215, 0, 0.7)'; 
-                    ctx.lineWidth = 1;
-                    ctx.lineCap = 'round';
+                    const tipX = m + maxReach * Math.cos(angle);
+                    const tipY = m - maxReach * Math.sin(angle); 
 
-                    const totalPetals = 8;
-                    
-                    for (let i = 0; i < totalPetals; i++) {
-                        const angle = (i * 2 * Math.PI) / totalPetals + (i * 0.05);
-                        const maxReach = 82 + (i % 3) * 11; 
-                        const controlOffset = 52; 
-                        
-                        const tipX = m + maxReach * Math.cos(angle);
-                        const tipY = rootY - maxReach * Math.sin(angle); 
+                    const petalGradient = ctx.createLinearGradient(m, m, tipX, tipY);
+                    const baseRgb = `rgb(${Math.round(col.r * 255)}, ${Math.round(col.g * 255)}, ${Math.round(col.b * 255)})`;
+                    const darkRgb = `rgb(${Math.round(col.r * 255 * 0.7)}, ${Math.round(col.g * 255 * 0.7)}, ${Math.round(col.b * 255 * 0.7)})`;
 
-                        const petalGradient = ctx.createLinearGradient(m, rootY, tipX, tipY);
-                        const baseRgb = `rgb(${Math.round(col.r * 255)}, ${Math.round(col.g * 255)}, ${Math.round(col.b * 255)})`;
-                        const darkRgb = `rgb(${Math.round(col.r * 255 * 0.7)}, ${Math.round(col.g * 255 * 0.7)}, ${Math.round(col.b * 255 * 0.7)})`;
+                    petalGradient.addColorStop(0, darkRgb); 
+                    petalGradient.addColorStop(0.6, baseRgb); 
+                    petalGradient.addColorStop(1, '#FFFFFF'); 
 
-                        petalGradient.addColorStop(0, darkRgb); 
-                        petalGradient.addColorStop(0.6, baseRgb); 
-                        petalGradient.addColorStop(1, '#FFFFFF'); 
-
-                        ctx.beginPath();
-                        ctx.moveTo(m, rootY); 
-                        
-                        ctx.quadraticCurveTo(
-                            m + controlOffset * Math.cos(angle - 0.6), rootY + controlOffset * Math.sin(angle - 0.6), 
-                            tipX, tipY
-                        );
-                        
-                        ctx.quadraticCurveTo(
-                            m + controlOffset * Math.cos(angle + 0.6), rootY + controlOffset * Math.sin(angle + 0.6), 
-                            m, rootY
-                        );
-                        
-                        ctx.fillStyle = petalGradient;
-                        ctx.fill();
-                        
-                        ctx.strokeStyle = '#FFD700'; 
-                        ctx.lineWidth = 2;
-                        ctx.stroke();
-                    }
-
-                    ctx.shadowBlur = 0;
                     ctx.beginPath();
-                    ctx.arc(m, rootY, 20, 0, Math.PI * 2); 
-                    ctx.fillStyle = '#A07000'; 
+                    ctx.moveTo(m, m); 
+                    ctx.quadraticCurveTo(
+                        m + controlOffset * Math.cos(angle - 0.6), m + controlOffset * Math.sin(angle - 0.6), 
+                        tipX, tipY
+                    );
+                    ctx.quadraticCurveTo(
+                        m + controlOffset * Math.cos(angle + 0.6), m + controlOffset * Math.sin(angle + 0.6), 
+                        m, m
+                    );
+                    ctx.fillStyle = petalGradient;
                     ctx.fill();
                     
-                } else {
-                     const grad = ctx.createRadialGradient(size/2,size/2,size*0.2,size/2,size/2,size*0.9);
-                     grad.addColorStop(0,'rgba(0,0,0,0)'); grad.addColorStop(1,'rgba(0,0,0,0.9)');
-                     ctx.fillStyle = grad; ctx.fillRect(0,0,size,size);
+                    ctx.strokeStyle = '#FFD700'; 
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
                 }
 
-                const tex = new THREE.CanvasTexture(canvas); tex.anisotropy=8;
-                this.cache[k] = tex; return tex;
+                ctx.shadowBlur = 0;
+                ctx.beginPath();
+                ctx.arc(m, m, 20, 0, Math.PI * 2); 
+                ctx.fillStyle = '#A07000'; 
+                ctx.fill();
+
+                const tex = new THREE.CanvasTexture(canvas);
+                tex.anisotropy = 8;
+                this.cache[colorHex] = tex;
+                return tex;
             }
         };
 
-        class MechanicalTetrahedronPuzzle {
+        class DualModeTetrahedronPuzzle {
             constructor() {
                 this.initScene();
                 this.initPuzzleData();
                 this.buildGeometry();
                 this.setupInteractions();
                 this.animate();
-                this.isShuffling = false;
             }
 
             initScene() {
@@ -348,40 +357,38 @@
                 this.scene = new THREE.Scene();
 
                 this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-                this.camera.position.set(0, 2, 7);
+                this.camPos3D = new THREE.Vector3(0, 2, 7);
+                this.camPos2D = new THREE.Vector3(0, 0, this.getFlatCameraDistance());
+                this.camera.position.copy(this.camPos3D);
 
-                this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // 开启透明以透出背景
+                this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
                 this.renderer.setSize(window.innerWidth, window.innerHeight);
                 this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-                this.renderer.setClearColor(0x000000, 0); // 完全透明背景
+                this.renderer.setClearColor(0x000000, 0);
                 this.renderer.outputEncoding = THREE.sRGBEncoding;
                 this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
                 this.renderer.toneMappingExposure = 1.2;
                 container.appendChild(this.renderer.domElement);
 
-                // 切换为 TrackballControls 以实现 120Hz 高刷屏畅快无死角的全自由视角旋转
                 this.controls = new THREE.TrackballControls(this.camera, this.renderer.domElement);
-                this.controls.rotateSpeed = 3.0;
+                this.controls.rotateSpeed = 2.8;
                 this.controls.zoomSpeed = 1.2;
                 this.controls.panSpeed = 0.3;
-                this.controls.noZoom = false;
                 this.controls.noPan = true;
-                this.controls.staticMoving = false;
-                this.controls.dynamicDampingFactor = 0.1;
+                this.controls.dynamicDampingFactor = 0.12;
 
-                // 优化后的布光（匹配液态氛围）
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
                 this.scene.add(ambientLight);
 
-                const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.7);
+                const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.75);
                 dirLight1.position.set(5, 10, 7);
                 this.scene.add(dirLight1);
 
-                const dirLight2 = new THREE.DirectionalLight(0xa0c0ff, 0.4);
+                const dirLight2 = new THREE.DirectionalLight(0xa0c0ff, 0.45);
                 dirLight2.position.set(-5, -5, -5);
                 this.scene.add(dirLight2);
 
-                // 创建动态流光渐变环境贴图(Fake EnvMap)以增强玻璃反射质感
+                // 流光反射贴图
                 const envCanvas = document.createElement('canvas');
                 envCanvas.width = 256; envCanvas.height = 256;
                 const envCtx = envCanvas.getContext('2d');
@@ -391,53 +398,63 @@
                 const envTexture = new THREE.CanvasTexture(envCanvas);
                 envTexture.mapping = THREE.EquirectangularReflectionMapping;
 
-                const texRed = TextureFactory.createWood(0xb90000);
-                const texYellow = TextureFactory.createWood(0xffd700);
-                const texBlue = TextureFactory.createWood(0x0045ad);
-                const texGreen = TextureFactory.createWood(0x009e60);
-                const texWhite = TextureFactory.createWood(0xe6e6e6);
-
                 this.materials = {
                     base: new THREE.MeshStandardMaterial({ 
-                        color: 0x060b14, roughness: 0.08, metalness: 0.25, 
-                        transparent: true, opacity: 0.85, envMap: envTexture, envMapIntensity: 2.5,
+                        color: 0x060b14, roughness: 0.12, metalness: 0.35, 
+                        envMap: envTexture, envMapIntensity: 2.5,
                         side: THREE.DoubleSide, depthWrite: true,
-                        polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1
+                        polygonOffset: true, polygonOffsetFactor: 2, polygonOffsetUnits: 2
                     }),
-                    red: new THREE.MeshStandardMaterial({ map: texRed, bumpMap: texRed, bumpScale: 0.01, roughness: 0.25, metalness: 0.1, emissive: 0x000000, envMap: envTexture, envMapIntensity: 0.4 }),
-                    yellow: new THREE.MeshStandardMaterial({ map: texYellow, bumpMap: texYellow, bumpScale: 0.01, roughness: 0.25, metalness: 0.1, emissive: 0x000000, envMap: envTexture, envMapIntensity: 0.4 }),
-                    blue: new THREE.MeshStandardMaterial({ map: texBlue, bumpMap: texBlue, bumpScale: 0.01, roughness: 0.25, metalness: 0.1, emissive: 0x000000, envMap: envTexture, envMapIntensity: 0.4 }),
-                    green: new THREE.MeshStandardMaterial({ map: texGreen, bumpMap: texGreen, bumpScale: 0.01, roughness: 0.25, metalness: 0.1, emissive: 0x000000, envMap: envTexture, envMapIntensity: 0.4 }),
-                    white: new THREE.MeshStandardMaterial({ map: texWhite, bumpMap: texWhite, bumpScale: 0.01, roughness: 0.2, metalness: 0.1, emissive: 0x000000, envMap: envTexture, envMapIntensity: 0.4 }),
+                    red: new THREE.MeshStandardMaterial({ map: TextureFactory.createWood(0xb90000), bumpMap: TextureFactory.createWood(0xb90000), bumpScale: 0.01, roughness: 0.25, metalness: 0.1, envMap: envTexture, envMapIntensity: 0.4 }),
+                    yellow: new THREE.MeshStandardMaterial({ map: TextureFactory.createWood(0xffd700), bumpMap: TextureFactory.createWood(0xffd700), bumpScale: 0.01, roughness: 0.25, metalness: 0.1, envMap: envTexture, envMapIntensity: 0.4 }),
+                    blue: new THREE.MeshStandardMaterial({ map: TextureFactory.createWood(0x0045ad), bumpMap: TextureFactory.createWood(0x0045ad), bumpScale: 0.01, roughness: 0.25, metalness: 0.1, envMap: envTexture, envMapIntensity: 0.4 }),
+                    green: new THREE.MeshStandardMaterial({ map: TextureFactory.createWood(0x009e60), bumpMap: TextureFactory.createWood(0x009e60), bumpScale: 0.01, roughness: 0.25, metalness: 0.1, envMap: envTexture, envMapIntensity: 0.4 }),
+                    white: new THREE.MeshStandardMaterial({ map: TextureFactory.createWood(0xe6e6e6), bumpMap: TextureFactory.createWood(0xe6e6e6), bumpScale: 0.01, roughness: 0.2, metalness: 0.1, envMap: envTexture, envMapIntensity: 0.4 }),
                     aluminum: new THREE.MeshStandardMaterial({ color: 0x0c0f12, roughness: 0.2, metalness: 0.95, envMap: envTexture, envMapIntensity: 3.0 })
                 };
+
+                // 双形态平滑变形状态机
+                this.morphT = 0.0;        // 0.0 为立体，1.0 为平铺展开
+                this.targetMorph = 0.0;
+                this.isFlat = false;
+                this.isShuffling = false;
 
                 window.addEventListener('resize', () => {
                     this.camera.aspect = window.innerWidth / window.innerHeight;
                     this.camera.updateProjectionMatrix();
+                    this.camPos2D.z = this.getFlatCameraDistance();
                     this.renderer.setSize(window.innerWidth, window.innerHeight);
                     this.controls.handleResize();
                 });
             }
 
+            getFlatCameraDistance() {
+                const aspect = window.innerWidth / window.innerHeight;
+                const requiredWidth = 9.8;
+                const requiredHeight = 4.2;
+                const vFovRad = (this.camera.fov * Math.PI) / 180;
+                const distH = (requiredHeight / 2) / Math.tan(vFovRad / 2);
+                const distW = (requiredWidth / 2) / (Math.tan(vFovRad / 2) * aspect);
+                return Math.max(distH, distW, 7.8);
+            }
+
             initPuzzleData() {
-                // 36个格位数据: 面0(0-8红), 面1(9-17黄), 面2(18-26蓝), 面3(27-35绿)
+                // 36格位：面0(0-8红), 面1(9-17黄), 面2(18-26蓝), 面3(27-35绿)
                 this.initialState = new Array(36);
                 for (let i = 0; i < 36; i++) {
                     this.initialState[i] = Math.floor(i / 9);
                 }
-                
-                // 设置第0面(红)的正中央倒三角形为空位(白, id=4)
-                // 在1,3,5阵列中，局部索引为2的是中心的倒三角
-                this.initialState[2] = 4; 
-                
+                // 第0面(红)正中央倒三角设为空白格 (编号4)
+                this.initialState[2] = 4;
                 this.state = [...this.initialState];
-                this.adj = []; // 将在 buildGeometry 环节通过空间碰撞自动生成邻接图
+
+                this.adj3D = [];
+                this.adj2D = [];
             }
 
             buildGeometry() {
-                const r = 2.0; 
-                const vertices = [
+                const r = 2.0;
+                const v3D = [
                     new THREE.Vector3(1, 1, 1).normalize().multiplyScalar(r),
                     new THREE.Vector3(1, -1, -1).normalize().multiplyScalar(r),
                     new THREE.Vector3(-1, 1, -1).normalize().multiplyScalar(r),
@@ -445,309 +462,314 @@
                 ];
 
                 const faceIndices = [
-                    [0, 2, 1], // 面0 (前)
-                    [0, 1, 3], // 面1 (右)
-                    [0, 3, 2], // 面2 (左)
-                    [1, 2, 3]  // 面3 (底)
+                    [0, 2, 1], // 面0 (红)
+                    [0, 1, 3], // 面1 (黄)
+                    [0, 3, 2], // 面2 (蓝)
+                    [1, 2, 3]  // 面3 (绿)
                 ];
 
-                // --- 构建内部支撑底座（圆角化处理，去除四个顶角的尖锐突兀感） ---
+                // 计算正四面体棱长与面高
+                const L = v3D[0].distanceTo(v3D[1]);
+                const H = L * Math.sqrt(3) / 2;
+
+                // 构建纸样实物作业（1x4 菱形条带）在 2D 平面的精确坐标布局
+                const to2D = (x, y) => new THREE.Vector3(x - 1.25 * L, y - H / 2, 0);
+                const P0 = to2D(0, 0);
+                const P1 = to2D(L, 0);
+                const P2 = to2D(2 * L, 0);
+                const Q0 = to2D(0.5 * L, H);
+                const Q1 = to2D(1.5 * L, H);
+                const Q2 = to2D(2.5 * L, H);
+
+                // 4个大面在 2D 平铺中的顶点映射
+                // 顺序：面0(正三角) - 面1(倒三角) - 面3(正三角) - 面2(倒三角)
+                const faceCorners2D = [
+                    [Q0, P0, P1], // 面0 (顶点0, 2, 1)
+                    [Q0, P1, Q1], // 面1 (顶点0, 1, 3)
+                    [Q2, Q1, P2], // 面2 (顶点0, 3, 2)
+                    [P1, P2, Q1]  // 面3 (顶点1, 2, 3)
+                ];
+
+                this.buttons = [];
+                this.diamonds = [];
+                this.triangleVerts3D = [];
+                this.triangleVerts2D = [];
+
+                const shrinkFactor = 0.90;
+                const extrudeHeight = 0.08;
+
+                // 构建底盘结构
                 const baseGeometry = new THREE.BufferGeometry();
-                const baseVerts = [];
-                const baseUvsArray = [];
-                const fBase = 0.15;
+                const baseVerts3D = [];
+                const baseVerts2D = [];
+                const baseUvs = [];
 
-                faceIndices.forEach(idx => {
-                    let A = vertices[idx[0]], B = vertices[idx[1]], C = vertices[idx[2]];
-                    let faceCenter = new THREE.Vector3().addVectors(A, B).add(C).divideScalar(3);
-                    let N = new THREE.Vector3().crossVectors(new THREE.Vector3().subVectors(B, A), new THREE.Vector3().subVectors(C, A)).normalize();
-                    if (N.dot(faceCenter) < 0) { let tmp = B; B = C; C = tmp; }
+                faceIndices.forEach((fIdx, faceId) => {
+                    const A3 = v3D[fIdx[0]], B3 = v3D[fIdx[1]], C3 = v3D[fIdx[2]];
+                    const center3 = new THREE.Vector3().addVectors(A3, B3).add(C3).divideScalar(3);
+                    let N3 = new THREE.Vector3().crossVectors(new THREE.Vector3().subVectors(B3, A3), new THREE.Vector3().subVectors(C3, A3)).normalize();
+                    if (N3.dot(center3) < 0) N3.multiplyScalar(-1);
 
-                    let corners = [A, B, C];
-                    let loopPoints = [];
+                    const [A2, B2, C2] = faceCorners2D[faceId];
+                    const center2 = new THREE.Vector3().addVectors(A2, B2).add(C2).divideScalar(3);
+                    const N2 = new THREE.Vector3(0, 0, 1);
+
+                    // 构建底座缓冲几何体
+                    const fBase = 0.15;
+                    const c3Corners = [A3, B3, C3];
+                    const c2Corners = [A2, B2, C2];
+                    const loop3 = [];
+                    const loop2 = [];
 
                     for (let i = 0; i < 3; i++) {
-                        let curr = corners[i], prev = corners[(i + 2) % 3], next = corners[(i + 1) % 3];
-                        let pA = curr.clone().lerp(prev, fBase);
-                        let pB = curr.clone().lerp(next, fBase);
+                        let curr3 = c3Corners[i], prev3 = c3Corners[(i + 2) % 3], next3 = c3Corners[(i + 1) % 3];
+                        let curr2 = c2Corners[i], prev2 = c2Corners[(i + 2) % 3], next2 = c2Corners[(i + 1) % 3];
+                        let pA3 = curr3.clone().lerp(prev3, fBase), pB3 = curr3.clone().lerp(next3, fBase);
+                        let pA2 = curr2.clone().lerp(prev2, fBase), pB2 = curr2.clone().lerp(next2, fBase);
+
                         for (let j = 0; j <= 4; j++) {
                             let t = j / 4;
-                            let p = new THREE.Vector3().addScaledVector(pA, (1 - t) * (1 - t)).addScaledVector(curr, 2 * (1 - t) * t).addScaledVector(pB, t * t);
-                            loopPoints.push(p);
+                            loop3.push(new THREE.Vector3().addScaledVector(pA3, (1 - t) * (1 - t)).addScaledVector(curr3, 2 * (1 - t) * t).addScaledVector(pB3, t * t));
+                            loop2.push(new THREE.Vector3().addScaledVector(pA2, (1 - t) * (1 - t)).addScaledVector(curr2, 2 * (1 - t) * t).addScaledVector(pB2, t * t));
                         }
                     }
 
-                    for (let i = 0; i < loopPoints.length; i++) {
-                        let p1 = loopPoints[i], p2 = loopPoints[(i + 1) % loopPoints.length];
-                        baseVerts.push(faceCenter.x, faceCenter.y, faceCenter.z, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
-                        baseUvsArray.push(0.5, 0.5, 0.5, 0.5, 0.5, 0.5);
+                    for (let i = 0; i < loop3.length; i++) {
+                        let p1_3 = loop3[i], p2_3 = loop3[(i + 1) % loop3.length];
+                        let p1_2 = loop2[i], p2_2 = loop2[(i + 1) % loop2.length];
+                        baseVerts3D.push(center3.x, center3.y, center3.z, p1_3.x, p1_3.y, p1_3.z, p2_3.x, p2_3.y, p2_3.z);
+                        baseVerts2D.push(center2.x, center2.y, center2.z, p1_2.x, p1_2.y, p1_2.z, p2_2.x, p2_2.y, p2_2.z);
+                        baseUvs.push(0.5, 0.5, 0.5, 0.5, 0.5, 0.5);
                     }
-                });
 
-                // 补全由于底座四个大角被削圆后留下的外侧缝隙面，使其圆滑过渡
-                for (let i = 0; i < 4; i++) {
-                    let curr = vertices[i];
-                    let others = [];
-                    faceIndices.forEach(idx => {
-                        if (idx.includes(i)) {
-                            let faceCenter = new THREE.Vector3().addVectors(vertices[idx[0]], vertices[idx[1]]).add(vertices[idx[2]]).divideScalar(3);
-                            let N = new THREE.Vector3().crossVectors(new THREE.Vector3().subVectors(vertices[idx[1]], vertices[idx[0]]), new THREE.Vector3().subVectors(vertices[idx[2]], vertices[idx[0]])).normalize();
-                            if (N.dot(faceCenter) < 0) N.multiplyScalar(-1);
-                            
-                            let pos = idx.indexOf(i);
-                            let prev = vertices[idx[(pos + 2) % 3]];
-                            let next = vertices[idx[(pos + 1) % 3]];
-                            let pA = curr.clone().lerp(prev, fBase);
-                            let pB = curr.clone().lerp(next, fBase);
-                            
-                            let pts = [];
-                            for (let j = 0; j <= 4; j++) {
-                                let t = j / 4;
-                                pts.push(new THREE.Vector3().addScaledVector(pA, (1 - t) * (1 - t)).addScaledVector(curr, 2 * (1 - t) * t).addScaledVector(pB, t * t));
-                            }
-                            others.push({ center: faceCenter, pts: pts, normal: N });
-                        }
-                    });
-
-                    if (others.length === 3) {
-                        let c0 = others[0].center, c1 = others[1].center, c2 = others[2].center;
-                        let edgeNorm = new THREE.Vector3().addVectors(c0, c1).add(c2).normalize();
-                        if (edgeNorm.dot(curr) < 0) edgeNorm.multiplyScalar(-1);
-                        
-                        others.sort((a, b) => {
-                            let vA = new THREE.Vector3().subVectors(a.center, curr);
-                            let vB = new THREE.Vector3().subVectors(b.center, curr);
-                            return new THREE.Vector3().crossVectors(vA, vB).dot(edgeNorm);
-                        });
-
-                        for (let k = 0; k < 3; k++) {
-                            let o1 = others[k], o2 = others[(k + 1) % 3];
-                            let arr1 = o1.pts, arr2 = o2.pts;
-                            for (let m = 0; m < arr1.length; m++) {
-                                baseVerts.push(curr.clone().multiplyScalar(1 - fBase).x, curr.clone().multiplyScalar(1 - fBase).y, curr.clone().multiplyScalar(1 - fBase).z, arr1[m].x, arr1[m].y, arr1[m].z, arr2[arr2.length - 1 - m].x, arr2[arr2.length - 1 - m].y, arr2[arr2.length - 1 - m].z);
-                                baseUvsArray.push(0.5, 0.5, 0.5, 0.5, 0.5, 0.5);
-                            }
-                        }
-                    }
-                }
-
-                baseGeometry.setAttribute('position', new THREE.Float32BufferAttribute(baseVerts, 3));
-                baseGeometry.setAttribute('uv', new THREE.Float32BufferAttribute(baseUvsArray, 2));
-                baseGeometry.computeVertexNormals();
-                const baseMesh = new THREE.Mesh(baseGeometry, this.materials.base);
-                this.scene.add(baseMesh);
-
-                // --- 生成36个小三角机械按钮 ---
-                this.buttons = [];
-                this.triangleVertices = []; // 存储未缩放的绝对顶点用于计算邻接图
-                this.diamonds = []; // 4面中心发光钻石组
-
-                const shrinkFactor = 0.90; // 块间距
-                const extrudeHeight = 0.08; // 按键浮出高度
-
-                faceIndices.forEach((idx, faceId) => {
-                    let A = vertices[idx[0]], B = vertices[idx[1]], C = vertices[idx[2]];
-                    let faceCenter = new THREE.Vector3().addVectors(A, B).add(C).divideScalar(3);
-                    let N = new THREE.Vector3().crossVectors(new THREE.Vector3().subVectors(B, A), new THREE.Vector3().subVectors(C, A)).normalize();
-                    if (N.dot(faceCenter) < 0) N.multiplyScalar(-1);
-
-                    // 在每个大面中心的留空区域镶嵌固定的多层六边形珠宝（严格中心对称、无旋转）
+                    // 创建中央发光六边形宝石
                     const jewelryGroup = new THREE.Group();
-                    
-                    // 1. 宝石本体 (尺寸严格缩小 50%：半径与高度均减半)
                     const gemBottomGeo = new THREE.CylinderGeometry(0.08, 0.01, 0.05, 6);
                     const gemTopGeo = new THREE.CylinderGeometry(0.045, 0.08, 0.025, 6);
-                    gemTopGeo.translate(0, 0.0375, 0); 
-                    
+                    gemTopGeo.translate(0, 0.0375, 0);
+
                     const gemMat = new THREE.MeshPhysicalMaterial({
-                        color: 0x000000, 
-                        emissive: 0x080015,
-                        emissiveIntensity: 0.4,
-                        roughness: 0.0,
-                        metalness: 0.9,
-                        flatShading: true,
-                        transmission: 0.0,
-                        ior: 2.4,
-                        clearcoat: 1.0,
-                        clearcoatRoughness: 0.0,
-                        reflectivity: 1.0,
-                        envMap: this.materials.base.envMap,
-                        envMapIntensity: 2.5
+                        color: 0x000000, emissive: 0x080015, emissiveIntensity: 0.4,
+                        roughness: 0.0, metalness: 0.9, flatShading: true,
+                        clearcoat: 1.0, envMap: this.materials.base.envMap, envMapIntensity: 2.5
                     });
-                    
                     const gemBottom = new THREE.Mesh(gemBottomGeo, gemMat);
                     const gemTop = new THREE.Mesh(gemTopGeo, gemMat);
 
-                    // 2. 柔和半透明深灰精致细线条（消除粗重刻意感）
-                    const edgeMat = new THREE.LineBasicMaterial({ 
-                        color: 0x11161d, 
-                        transparent: true, 
-                        opacity: 0.4 
-                    });
-                    const bottomEdges = new THREE.LineSegments(new THREE.EdgesGeometry(gemBottomGeo, 15), edgeMat);
-                    const topEdges = new THREE.LineSegments(new THREE.EdgesGeometry(gemTopGeo, 15), edgeMat);
+                    const edgeMat = new THREE.LineBasicMaterial({ color: 0x11161d, transparent: true, opacity: 0.4 });
+                    jewelryGroup.add(gemBottom, gemTop, new THREE.LineSegments(new THREE.EdgesGeometry(gemBottomGeo, 15), edgeMat), new THREE.LineSegments(new THREE.EdgesGeometry(gemTopGeo, 15), edgeMat));
 
-                    jewelryGroup.add(gemBottom);
-                    jewelryGroup.add(gemTop);
-                    jewelryGroup.add(bottomEdges);
-                    jewelryGroup.add(topEdges);
-                    
-// 镶爪已移除
+                    const quat3D = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), N3);
+                    const quat2D = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), N2);
 
-                    // 对齐到大面中心并贴合
-                    jewelryGroup.position.copy(faceCenter).addScaledVector(N, 0.02);
-                    jewelryGroup.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), N);
-                    
-                    // 绕自身Y轴(即表面法线)旋转30度，确保六边形的直边与周围的三角孔严格平行对称
-                    jewelryGroup.rotateY(Math.PI / 6); 
+                    jewelryGroup.position.copy(center3).addScaledVector(N3, 0.02);
+                    jewelryGroup.quaternion.copy(quat3D);
 
                     jewelryGroup.userData = {
+                        pos3D: center3.clone().addScaledVector(N3, 0.02),
+                        pos2D: center2.clone().addScaledVector(N2, 0.02),
+                        quat3D: quat3D,
+                        quat2D: quat2D,
+                        normal3D: N3.clone(),
                         phase: faceId * 1.57,
                         colorSeed: faceId * 0.3,
                         gemMeshes: [gemBottom, gemTop]
                     };
-                    
                     this.scene.add(jewelryGroup);
                     this.diamonds.push(jewelryGroup);
 
-                    // 获取大面进行3等分后的任意坐标点公式
-                    const getP = (r, c) => {
-                        let wA = 3 - r;
-                        let wB = r - c;
-                        let wC = c;
+                    // 重心坐标细分求点函数
+                    const getP = (corners, r, c) => {
+                        let wA = 3 - r, wB = r - c, wC = c;
                         return new THREE.Vector3(
-                            (wA*A.x + wB*B.x + wC*C.x)/3,
-                            (wA*A.y + wB*B.y + wC*C.y)/3,
-                            (wA*A.z + wB*B.z + wC*C.z)/3
+                            (wA * corners[0].x + wB * corners[1].x + wC * corners[2].x) / 3,
+                            (wA * corners[0].y + wB * corners[1].y + wC * corners[2].y) / 3,
+                            (wA * corners[0].z + wB * corners[1].z + wC * corners[2].z) / 3
                         );
                     };
 
                     let localIdx = 0;
-                    // 遍历行 0, 1, 2，产生 1, 3, 5 排列的小三角
                     for (let r = 0; r <= 2; r++) {
                         for (let c = 0; c <= r; c++) {
-                            // 预设正三角形UV映射 (中心对称，适应[0,1]区间)
                             const uvU_A = new THREE.Vector2(0.5, 1.0);
                             const uvU_B = new THREE.Vector2(0.067, 0.25);
                             const uvU_C = new THREE.Vector2(0.933, 0.25);
 
-                            const uvI_A = new THREE.Vector2(0.067, 0.75); // Top Left
-                            const uvI_B = new THREE.Vector2(0.5, 0.0);    // Bottom Apex
-                            const uvI_C = new THREE.Vector2(0.933, 0.75); // Top Right
+                            const uvI_A = new THREE.Vector2(0.067, 0.75);
+                            const uvI_B = new THREE.Vector2(0.5, 0.0);
+                            const uvI_C = new THREE.Vector2(0.933, 0.75);
 
-                            // 构造正置的三角形 (指向上顶点A)
-                            let p1 = getP(r, c);
-                            let p2 = getP(r + 1, c);
-                            let p3 = getP(r + 1, c + 1);
-                            this.createButton(p1, p2, p3, uvU_A, uvU_B, uvU_C, N, faceId, localIdx++, shrinkFactor, extrudeHeight);
+                            // 正三角
+                            let p1_3 = getP([A3, B3, C3], r, c);
+                            let p2_3 = getP([A3, B3, C3], r + 1, c);
+                            let p3_3 = getP([A3, B3, C3], r + 1, c + 1);
 
-                            // 构造倒置的三角形
+                            let p1_2 = getP([A2, B2, C2], r, c);
+                            let p2_2 = getP([A2, B2, C2], r + 1, c);
+                            let p3_2 = getP([A2, B2, C2], r + 1, c + 1);
+
+                            this.createButton(
+                                [p1_3, p2_3, p3_3], [p1_2, p2_2, p3_2],
+                                [uvU_A, uvU_B, uvU_C],
+                                N3, N2, faceId, localIdx++, shrinkFactor, extrudeHeight
+                            );
+
+                            // 倒三角
                             if (c < r) {
-                                let p4 = getP(r, c);       // Top Left
-                                let p5 = getP(r + 1, c + 1); // Bottom Apex
-                                let p6 = getP(r, c + 1);   // Top Right
-                                this.createButton(p4, p5, p6, uvI_A, uvI_B, uvI_C, N, faceId, localIdx++, shrinkFactor, extrudeHeight);
+                                let p4_3 = getP([A3, B3, C3], r, c);
+                                let p5_3 = getP([A3, B3, C3], r + 1, c + 1);
+                                let p6_3 = getP([A3, B3, C3], r, c + 1);
+
+                                let p4_2 = getP([A2, B2, C2], r, c);
+                                let p5_2 = getP([A2, B2, C2], r + 1, c + 1);
+                                let p6_2 = getP([A2, B2, C2], r, c + 1);
+
+                                this.createButton(
+                                    [p4_3, p5_3, p6_3], [p4_2, p5_2, p6_2],
+                                    [uvI_A, uvI_B, uvI_C],
+                                    N3, N2, faceId, localIdx++, shrinkFactor, extrudeHeight
+                                );
                             }
                         }
                     }
                 });
 
-                // --- 自动计算3D空间中的36节点跨面邻接图 ---
+                baseGeometry.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(baseVerts3D), 3));
+                baseGeometry.setAttribute('uv', new THREE.Float32BufferAttribute(baseUvs, 2));
+                baseGeometry.computeVertexNormals();
+
+                this.baseMesh = new THREE.Mesh(baseGeometry, this.materials.base);
+                this.baseMesh.userData = {
+                    verts3D: new Float32Array(baseVerts3D),
+                    verts2D: new Float32Array(baseVerts2D)
+                };
+                this.scene.add(this.baseMesh);
+
+                // 拓扑邻接图生成
                 this.generateAdjacencyGraph();
                 this.updateVisuals();
             }
 
-            createButton(vA, vB, vC, uvA, uvB, uvC, N, faceId, localIdx, shrinkFactor, extrudeHeight) {
-                // 确保法线方向构造顺序正确
-                let cross = new THREE.Vector3().crossVectors(
-                    new THREE.Vector3().subVectors(vB, vA),
-                    new THREE.Vector3().subVectors(vC, vA)
-                );
-                if (cross.dot(N) < 0) {
-                    let temp = vB; vB = vC; vC = temp;
-                    let tempUv = uvB; uvB = uvC; uvC = tempUv; // 同步反转UV映射
+            createButton(pts3D, pts2D, uvs, N3, N2, faceId, localIdx, shrinkFactor, extrudeHeight) {
+                let [vA3, vB3, vC3] = pts3D;
+                let [vA2, vB2, vC2] = pts2D;
+                let [uvA, uvB, uvC] = uvs;
+
+                // 分别确立三维与二维空间的正向法线缠绕规则，根除正反面翻转
+                let cross3 = new THREE.Vector3().crossVectors(new THREE.Vector3().subVectors(vB3, vA3), new THREE.Vector3().subVectors(vC3, vA3));
+                if (cross3.dot(N3) < 0) {
+                    let tmp = vB3; vB3 = vC3; vC3 = tmp;
+                }
+                let cross2 = new THREE.Vector3().crossVectors(new THREE.Vector3().subVectors(vB2, vA2), new THREE.Vector3().subVectors(vC2, vA2));
+                if (cross2.dot(N2) < 0) {
+                    let tmp2 = vB2; vB2 = vC2; vC2 = tmp2;
                 }
 
-                this.triangleVertices.push([vA, vB, vC]); // 记录绝对顶点用于邻接计算
+                this.triangleVerts3D.push([vA3, vB3, vC3]);
+                this.triangleVerts2D.push([vA2, vB2, vC2]);
 
-                // 向自身重心收缩出缝隙
-                let cSub = new THREE.Vector3().addVectors(vA, vB).add(vC).divideScalar(3);
-                let v1 = new THREE.Vector3().subVectors(vA, cSub).multiplyScalar(shrinkFactor).add(cSub);
-                let v2 = new THREE.Vector3().subVectors(vB, cSub).multiplyScalar(shrinkFactor).add(cSub);
-                let v3 = new THREE.Vector3().subVectors(vC, cSub).multiplyScalar(shrinkFactor).add(cSub);
+                // 缝隙收缩与圆角化
+                const shrink = (pts, f) => {
+                    let c = new THREE.Vector3().addVectors(pts[0], pts[1]).add(pts[2]).divideScalar(3);
+                    return [
+                        new THREE.Vector3().subVectors(pts[0], c).multiplyScalar(f).add(c),
+                        new THREE.Vector3().subVectors(pts[1], c).multiplyScalar(f).add(c),
+                        new THREE.Vector3().subVectors(pts[2], c).multiplyScalar(f).add(c)
+                    ];
+                };
 
-                let f = 0.22;
-                let corners = [v1, v2, v3];
-                let uvsCorners = [uvA, uvB, uvC];
-                let loopPoints = [];
-                let loopUvs = [];
+                let [s1_3, s2_3, s3_3] = shrink([vA3, vB3, vC3], shrinkFactor);
+                let [s1_2, s2_2, s3_2] = shrink([vA2, vB2, vC2], shrinkFactor);
 
-                for (let i = 0; i < 3; i++) {
-                    let curr = corners[i], prev = corners[(i + 2) % 3], next = corners[(i + 1) % 3];
-                    let cuv = uvsCorners[i], puv = uvsCorners[(i + 2) % 3], nuv = uvsCorners[(i + 1) % 3];
-                    let pA = curr.clone().lerp(prev, f), uvA_pt = cuv.clone().lerp(puv, f);
-                    let pB = curr.clone().lerp(next, f), uvB_pt = cuv.clone().lerp(nuv, f);
-                    for (let j = 0; j <= 4; j++) {
-                        let t = j / 4;
-                        let p = new THREE.Vector3().addScaledVector(pA, (1 - t) * (1 - t)).addScaledVector(curr, 2 * (1 - t) * t).addScaledVector(pB, t * t);
-                        let uv = new THREE.Vector2().addScaledVector(uvA_pt, (1 - t) * (1 - t)).addScaledVector(cuv, 2 * (1 - t) * t).addScaledVector(uvB_pt, t * t);
-                        loopPoints.push(p);
-                        loopUvs.push(uv);
-                    } 
-                }
+                const buildLoops = (corners, uvsC) => {
+                    let f = 0.22, loops = [], loopUvs = [];
+                    for (let i = 0; i < 3; i++) {
+                        let curr = corners[i], prev = corners[(i + 2) % 3], next = corners[(i + 1) % 3];
+                        let cuv = uvsC[i], puv = uvsC[(i + 2) % 3], nuv = uvsC[(i + 1) % 3];
+                        let pA = curr.clone().lerp(prev, f), uvA_pt = cuv.clone().lerp(puv, f);
+                        let pB = curr.clone().lerp(next, f), uvB_pt = cuv.clone().lerp(nuv, f);
+                        for (let j = 0; j <= 4; j++) {
+                            let t = j / 4;
+                            loops.push(new THREE.Vector3().addScaledVector(pA, (1 - t) * (1 - t)).addScaledVector(curr, 2 * (1 - t) * t).addScaledVector(pB, t * t));
+                            loopUvs.push(new THREE.Vector2().addScaledVector(uvA_pt, (1 - t) * (1 - t)).addScaledVector(cuv, 2 * (1 - t) * t).addScaledVector(uvB_pt, t * t));
+                        }
+                    }
+                    return { loops, loopUvs };
+                };
 
-                const geometry = new THREE.BufferGeometry();
-                const frameGeo = new THREE.BufferGeometry();
-                let verts = [], uvs = [];
-                let frameVerts = [];
-                let cSub_top = cSub.clone().addScaledVector(N, extrudeHeight);
-                let cSub_uv = new THREE.Vector2().addVectors(uvA, uvB).add(uvC).divideScalar(3);
+                let loopObj3 = buildLoops([s1_3, s2_3, s3_3], [uvA, uvB, uvC]);
+                let loopObj2 = buildLoops([s1_2, s2_2, s3_2], [uvA, uvB, uvC]);
 
+                const cSub3 = new THREE.Vector3().addVectors(vA3, vB3).add(vC3).divideScalar(3);
+                const cSub2 = new THREE.Vector3().addVectors(vA2, vB2).add(vC2).divideScalar(3);
+                const cSub_uv = new THREE.Vector2().addVectors(uvA, uvB).add(uvC).divideScalar(3);
+
+                const cSub_top3 = cSub3.clone().addScaledVector(N3, extrudeHeight);
+                const cSub_top2 = cSub2.clone().addScaledVector(N2, extrudeHeight);
+
+                let verts3 = [], verts2 = [], uvsArr = [];
+                let frameVerts3 = [], frameVerts2 = [];
                 const ringWidthRatio = 0.15;
 
-                for (let i = 0; i < loopPoints.length; i++) {
-                    let p1 = loopPoints[i], p2 = loopPoints[(i + 1) % loopPoints.length];
-                    let u1 = loopUvs[i], u2 = loopUvs[(i + 1) % loopUvs.length];
-                    let p1_top = p1.clone().addScaledVector(N, extrudeHeight);
-                    let p2_top = p2.clone().addScaledVector(N, extrudeHeight);
+                for (let i = 0; i < loopObj3.loops.length; i++) {
+                    let nextI = (i + 1) % loopObj3.loops.length;
+                    let p1_3 = loopObj3.loops[i], p2_3 = loopObj3.loops[nextI];
+                    let p1_2 = loopObj2.loops[i], p2_2 = loopObj2.loops[nextI];
+                    let u1 = loopObj3.loopUvs[i], u2 = loopObj3.loopUvs[nextI];
 
-                    let p1_in = p1_top.clone().lerp(cSub_top, ringWidthRatio);
-                    let p2_in = p2_top.clone().lerp(cSub_top, ringWidthRatio);
+                    let p1_top3 = p1_3.clone().addScaledVector(N3, extrudeHeight);
+                    let p2_top3 = p2_3.clone().addScaledVector(N3, extrudeHeight);
+                    let p1_top2 = p1_2.clone().addScaledVector(N2, extrudeHeight);
+                    let p2_top2 = p2_2.clone().addScaledVector(N2, extrudeHeight);
+
+                    let p1_in3 = p1_top3.clone().lerp(cSub_top3, ringWidthRatio);
+                    let p2_in3 = p2_top3.clone().lerp(cSub_top3, ringWidthRatio);
+                    let p1_in2 = p1_top2.clone().lerp(cSub_top2, ringWidthRatio);
+                    let p2_in2 = p2_top2.clone().lerp(cSub_top2, ringWidthRatio);
+
                     let u1_in = u1.clone().lerp(cSub_uv, ringWidthRatio);
                     let u2_in = u2.clone().lerp(cSub_uv, ringWidthRatio);
 
-                    verts.push(cSub_top.x, cSub_top.y, cSub_top.z, p1_in.x, p1_in.y, p1_in.z, p2_in.x, p2_in.y, p2_in.z);
-                    uvs.push(cSub_uv.x, cSub_uv.y, u1_in.x, u1_in.y, u2_in.x, u2_in.y);
+                    // 顶面嵌花（仅保留顶面，剔除底面以避免共面闪烁与错位穿透）
+                    verts3.push(cSub_top3.x, cSub_top3.y, cSub_top3.z, p1_in3.x, p1_in3.y, p1_in3.z, p2_in3.x, p2_in3.y, p2_in3.z);
+                    verts2.push(cSub_top2.x, cSub_top2.y, cSub_top2.z, p1_in2.x, p1_in2.y, p1_in2.z, p2_in2.x, p2_in2.y, p2_in2.z);
+                    uvsArr.push(cSub_uv.x, cSub_uv.y, u1_in.x, u1_in.y, u2_in.x, u2_in.y);
 
-                    verts.push(cSub.x, cSub.y, cSub.z, p2.x, p2.y, p2.z, p1.x, p1.y, p1.z);
-                    uvs.push(cSub_uv.x, cSub_uv.y, u2.x, u2.y, u1.x, u1.y);
+                    // 铝框包边（环形无缝拼接，外框与内芯物理共边，消除Z-fighting）
+                    frameVerts3.push(p1_top3.x, p1_top3.y, p1_top3.z, p2_top3.x, p2_top3.y, p2_top3.z, p2_in3.x, p2_in3.y, p2_in3.z);
+                    frameVerts3.push(p1_top3.x, p1_top3.y, p1_top3.z, p2_in3.x, p2_in3.y, p2_in3.z, p1_in3.x, p1_in3.y, p1_in3.z);
+                    frameVerts3.push(p1_3.x, p1_3.y, p1_3.z, p2_3.x, p2_3.y, p2_3.z, p2_top3.x, p2_top3.y, p2_top3.z);
+                    frameVerts3.push(p1_3.x, p1_3.y, p1_3.z, p2_top3.x, p2_top3.y, p2_top3.z, p1_top3.x, p1_top3.y, p1_top3.z);
 
-                    let p1_top_out = p1_top.clone().addScaledVector(N, 0.002);
-                    let p2_top_out = p2_top.clone().addScaledVector(N, 0.002);
-                    let p1_in_out = p1_in.clone().addScaledVector(N, 0.002);
-                    let p2_in_out = p2_in.clone().addScaledVector(N, 0.002);
-
-                    frameVerts.push(p1_top_out.x, p1_top_out.y, p1_top_out.z, p2_top_out.x, p2_top_out.y, p2_top_out.z, p2_in_out.x, p2_in_out.y, p2_in_out.z);
-                    frameVerts.push(p1_top_out.x, p1_top_out.y, p1_top_out.z, p2_in_out.x, p2_in_out.y, p2_in_out.z, p1_in_out.x, p1_in_out.y, p1_in_out.z);
-
-                    frameVerts.push(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, p2_top.x, p2_top.y, p2_top.z);
-                    frameVerts.push(p1.x, p1.y, p1.z, p2_top.x, p2_top.y, p2_top.z, p1_top.x, p1_top.y, p1_top.z);
+                    frameVerts2.push(p1_top2.x, p1_top2.y, p1_top2.z, p2_top2.x, p2_top2.y, p2_top2.z, p2_in2.x, p2_in2.y, p2_in2.z);
+                    frameVerts2.push(p1_top2.x, p1_top2.y, p1_top2.z, p2_in2.x, p2_in2.y, p2_in2.z, p1_in2.x, p1_in2.y, p1_in2.z);
+                    frameVerts2.push(p1_2.x, p1_2.y, p1_2.z, p2_2.x, p2_2.y, p2_2.z, p2_top2.x, p2_top2.y, p2_top2.z);
+                    frameVerts2.push(p1_2.x, p1_2.y, p1_2.z, p2_top2.x, p2_top2.y, p2_top2.z, p1_top2.x, p1_top2.y, p1_top2.z);
                 }
 
-                geometry.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
-                geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+                const geometry = new THREE.BufferGeometry();
+                geometry.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(verts3), 3));
+                geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvsArr, 2));
                 geometry.computeVertexNormals();
 
-                frameGeo.setAttribute('position', new THREE.Float32BufferAttribute(frameVerts, 3));
+                const frameGeo = new THREE.BufferGeometry();
+                frameGeo.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(frameVerts3), 3));
                 frameGeo.computeVertexNormals();
 
                 const buttonMesh = new THREE.Mesh(geometry, this.materials.white);
                 const frameMesh = new THREE.Mesh(frameGeo, this.materials.aluminum);
                 buttonMesh.add(frameMesh);
-                
+
                 buttonMesh.userData = {
                     index: faceId * 9 + localIdx,
-                    normal: N.clone(),
+                    normal3D: N3.clone(),
+                    normal2D: N2.clone(),
+                    normal: N3.clone(),
+                    verts3D: new Float32Array(verts3),
+                    verts2D: new Float32Array(verts2),
+                    frameVerts3D: new Float32Array(frameVerts3),
+                    frameVerts2D: new Float32Array(frameVerts2),
+                    frameMesh: frameMesh,
                     isPressed: false,
                     animProgress: 0,
                     onPressPeak: null
@@ -758,29 +780,47 @@
             }
 
             generateAdjacencyGraph() {
-                // 如果两个三角块共有两个相同的顶点，则它们在空间中共边相邻 (包含跨面相接的情况)
-                for (let i = 0; i < 36; i++) this.adj[i] = [];
-                const isSame = (p1, p2) => p1.distanceTo(p2) < 0.001;
+                const isSame = (p1, p2) => p1.distanceTo(p2) < 0.005;
 
+                // 1. 三维空间邻接（全棱面共边闭合）
+                for (let i = 0; i < 36; i++) this.adj3D[i] = [];
                 for (let i = 0; i < 36; i++) {
                     for (let j = i + 1; j < 36; j++) {
                         let shared = 0;
-                        let triA = this.triangleVertices[i];
-                        let triB = this.triangleVertices[j];
-                        for(let a = 0; a < 3; a++) {
-                            for(let b = 0; b < 3; b++) {
-                                if (isSame(triA[a], triB[b])) {
-                                    shared++;
-                                    break;
-                                }
+                        let triA = this.triangleVerts3D[i], triB = this.triangleVerts3D[j];
+                        for (let a = 0; a < 3; a++) {
+                            for (let b = 0; b < 3; b++) {
+                                if (isSame(triA[a], triB[b])) { shared++; break; }
                             }
                         }
                         if (shared === 2) {
-                            this.adj[i].push(j);
-                            this.adj[j].push(i);
+                            this.adj3D[i].push(j);
+                            this.adj3D[j].push(i);
                         }
                     }
                 }
+
+                // 2. 二维平面展开图邻接（严格匹配实物图样：仅沿内部 3 条折痕边物理连通）
+                for (let i = 0; i < 36; i++) this.adj2D[i] = [];
+                for (let i = 0; i < 36; i++) {
+                    for (let j = i + 1; j < 36; j++) {
+                        let shared = 0;
+                        let triA = this.triangleVerts2D[i], triB = this.triangleVerts2D[j];
+                        for (let a = 0; a < 3; a++) {
+                            for (let b = 0; b < 3; b++) {
+                                if (isSame(triA[a], triB[b])) { shared++; break; }
+                            }
+                        }
+                        if (shared === 2) {
+                            this.adj2D[i].push(j);
+                            this.adj2D[j].push(i);
+                        }
+                    }
+                }
+            }
+
+            get currentAdj() {
+                return this.isFlat ? this.adj2D : this.adj3D;
             }
 
             setupInteractions() {
@@ -814,12 +854,10 @@
             trySwap(hitButton) {
                 if (hitButton.userData.animProgress === 0 && !hitButton.userData.isPressed) {
                     const clickedIndex = hitButton.userData.index;
-                    const emptyIndex = this.state.indexOf(4); 
+                    const emptyIndex = this.state.indexOf(4);
 
-                    // 检验点击格是否与白色空缺格相邻
-                    if (this.adj[emptyIndex].includes(clickedIndex)) {
+                    if (this.currentAdj[emptyIndex].includes(clickedIndex)) {
                         hitButton.userData.isPressed = true;
-                        // 机械压入到最深点时触发状态逻辑变换
                         hitButton.userData.onPressPeak = () => {
                             this.state[emptyIndex] = this.state[clickedIndex];
                             this.state[clickedIndex] = 4;
@@ -827,7 +865,7 @@
                             this.checkWin();
                         };
                     } else {
-                        // 播放错误拒止动画 (仅点击不滑动)
+                        // 拒止轻弹动画
                         hitButton.userData.isPressed = true;
                         hitButton.userData.onPressPeak = null;
                     }
@@ -842,8 +880,27 @@
                     else if (colorId === 1) mat = this.materials.yellow;
                     else if (colorId === 2) mat = this.materials.blue;
                     else if (colorId === 3) mat = this.materials.green;
-                    else if (colorId === 4) mat = this.materials.white;
                     this.buttons[i].material = mat;
+                }
+            }
+
+            toggleMorph() {
+                this.targetMorph = this.targetMorph === 0.0 ? 1.0 : 0.0;
+                const btnText = document.getElementById('toggle-text');
+                const btnIcon = document.getElementById('toggle-icon');
+                const badge = document.getElementById('mode-badge');
+
+                if (this.targetMorph === 1.0) {
+                    this.camPos2D.z = this.getFlatCameraDistance();
+                    this.controls.reset();
+                    btnText.innerText = "立体折叠";
+                    btnIcon.innerText = "🧊";
+                    badge.innerText = "当前形态：平面画卷 (1×4 展开图)";
+                } else {
+                    this.controls.reset();
+                    btnText.innerText = "平铺展开";
+                    btnIcon.innerText = "📐";
+                    badge.innerText = "当前形态：三维正四面体";
                 }
             }
 
@@ -851,37 +908,37 @@
                 if (this.isShuffling) return;
                 document.getElementById('victory-overlay').classList.remove('show');
 
-                const totalSteps = 1000; // 默认极致复杂度打乱
+                const totalSteps = 800;
                 let lastEmpty = -1;
+                const activeAdj = this.currentAdj;
 
-                // 瞬间执行逻辑循环，不等待动画
                 for (let i = 0; i < totalSteps; i++) {
                     let emptyIdx = this.state.indexOf(4);
-                    let neighbors = this.adj[emptyIdx].filter(n => n !== lastEmpty);
-                    if (neighbors.length === 0) neighbors = this.adj[emptyIdx];
+                    let neighbors = activeAdj[emptyIdx].filter(n => n !== lastEmpty);
+                    if (neighbors.length === 0) neighbors = activeAdj[emptyIdx];
                     let randomNext = neighbors[Math.floor(Math.random() * neighbors.length)];
-                    
-                    // 状态转换
+
                     this.state[emptyIdx] = this.state[randomNext];
                     this.state[randomNext] = 4;
                     lastEmpty = emptyIdx;
                 }
 
                 this.updateVisuals();
-                
-                // 视觉上的“一气呵成”反馈：轻微晃动所有按钮
-                this.buttons.forEach(btn => {
-                    btn.userData.animProgress = 0.5;
-                });
+                this.buttons.forEach(btn => btn.userData.animProgress = 0.4);
             }
 
             reset() {
-                if (this.isShuffling) return;
                 this.state = [...this.initialState];
                 this.updateVisuals();
                 document.getElementById('victory-overlay').classList.remove('show');
-                this.camera.position.set(0, 2, 7);
-                this.controls.reset();
+                if (this.targetMorph === 0.0) {
+                    this.camera.position.copy(this.camPos3D);
+                    this.controls.reset();
+                } else {
+                    this.camPos2D.z = this.getFlatCameraDistance();
+                    this.camera.position.copy(this.camPos2D);
+                    this.controls.reset();
+                }
             }
 
             checkWin() {
@@ -901,41 +958,110 @@
                 requestAnimationFrame(() => this.animate());
                 this.controls.update();
 
-                const maxPressDepth = 0.08; // 按下深度
+                // 1. 双形态平滑插值过渡（终点精密吸附归一，消除浮点残余位移）
+                if (Math.abs(this.morphT - this.targetMorph) > 0.0002) {
+                    this.morphT += (this.targetMorph - this.morphT) * 0.08;
+                    if (Math.abs(this.morphT - this.targetMorph) <= 0.0002) {
+                        this.morphT = this.targetMorph;
+                    }
+                    this.isFlat = this.morphT > 0.5;
 
+                    // 三次方平滑缓动
+                    const p = (this.morphT === 0) ? 0 : ((this.morphT === 1) ? 1 : (this.morphT < 0.5 ? 4 * this.morphT * this.morphT * this.morphT : 1 - Math.pow(-2 * this.morphT + 2, 3) / 2));
+                    // 花蓉外绽弧度拱起（处于两极完全展开或折叠态时强制为零）
+                    const arc = (p === 0 || p === 1) ? 0 : Math.sin(p * Math.PI) * 0.42;
+
+                    // 摄像机镜头位姿跟随过渡
+                    this.camPos2D.z = this.getFlatCameraDistance();
+                    const targetCam = new THREE.Vector3().lerpVectors(this.camPos3D, this.camPos2D, p);
+                    this.camera.position.lerp(targetCam, 0.1);
+
+                    // 底座形变
+                    const basePos = this.baseMesh.geometry.attributes.position;
+                    const b3 = this.baseMesh.userData.verts3D;
+                    const b2 = this.baseMesh.userData.verts2D;
+                    for (let k = 0; k < basePos.count; k++) {
+                        basePos.setXYZ(
+                            k,
+                            (1 - p) * b3[k * 3] + p * b2[k * 3],
+                            (1 - p) * b3[k * 3 + 1] + p * b2[k * 3 + 1],
+                            (1 - p) * b3[k * 3 + 2] + p * b2[k * 3 + 2] + (1 - p) * arc * 0.3
+                        );
+                    }
+                    basePos.needsUpdate = true;
+                    this.baseMesh.geometry.computeVertexNormals();
+
+                    // 36个按键变形插值
+                    this.buttons.forEach(btn => {
+                        const pos = btn.geometry.attributes.position;
+                        const v3 = btn.userData.verts3D, v2 = btn.userData.verts2D;
+                        const n3 = btn.userData.normal3D;
+
+                        for (let k = 0; k < pos.count; k++) {
+                            pos.setXYZ(
+                                k,
+                                (1 - p) * v3[k * 3] + p * v2[k * 3] + n3.x * arc,
+                                (1 - p) * v3[k * 3 + 1] + p * v2[k * 3 + 1] + n3.y * arc,
+                                (1 - p) * v3[k * 3 + 2] + p * v2[k * 3 + 2] + n3.z * arc
+                            );
+                        }
+                        pos.needsUpdate = true;
+                        btn.geometry.computeVertexNormals();
+                        btn.geometry.computeBoundingSphere();
+
+                        const fPos = btn.userData.frameMesh.geometry.attributes.position;
+                        const fv3 = btn.userData.frameVerts3D, fv2 = btn.userData.frameVerts2D;
+                        for (let k = 0; k < fPos.count; k++) {
+                            fPos.setXYZ(
+                                k,
+                                (1 - p) * fv3[k * 3] + p * fv2[k * 3] + n3.x * arc,
+                                (1 - p) * fv3[k * 3 + 1] + p * fv2[k * 3 + 1] + n3.y * arc,
+                                (1 - p) * fv3[k * 3 + 2] + p * fv2[k * 3 + 2] + n3.z * arc
+                            );
+                        }
+                        fPos.needsUpdate = true;
+                        btn.userData.frameMesh.geometry.computeVertexNormals();
+
+                        btn.userData.normal.lerpVectors(btn.userData.normal3D, btn.userData.normal2D, p).normalize();
+                    });
+
+                    // 四面中心发光珠宝过渡
+                    this.diamonds.forEach(gem => {
+                        gem.position.lerpVectors(gem.userData.pos3D, gem.userData.pos2D, p).addScaledVector(gem.userData.normal3D, arc);
+                        gem.quaternion.slerpQuaternions(gem.userData.quat3D, gem.userData.quat2D, p);
+                    });
+                }
+
+                // 2. 机械按键触击下陷动画
+                const maxPressDepth = 0.08;
                 this.buttons.forEach(btn => {
                     if (btn.userData.isPressed) {
-                        btn.userData.animProgress += 0.28; // 触击压入速度
+                        btn.userData.animProgress += 0.28;
                         if (btn.userData.animProgress >= 1) {
                             btn.userData.animProgress = 1;
                             btn.userData.isPressed = false;
-                            
                             if (typeof btn.userData.onPressPeak === 'function') {
                                 btn.userData.onPressPeak();
                                 btn.userData.onPressPeak = null;
                             }
                         }
                     } else if (btn.userData.animProgress > 0) {
-                        btn.userData.animProgress -= 0.1; // 机械阻尼回弹速度
+                        btn.userData.animProgress -= 0.1;
                         if (btn.userData.animProgress < 0) btn.userData.animProgress = 0;
                     }
 
-                    // 沿按钮自身面法线的反方向产生下陷位移
                     const offset = -maxPressDepth * btn.userData.animProgress;
                     btn.position.set(0, 0, 0).addScaledVector(btn.userData.normal, offset);
                 });
 
-                // 固定的多层珠宝：深邃高饱和暗夜幽光变色（深紫、翡翠深绿、血钻深红、深海蓝）
+                // 3. 珠宝深邃呼吸微光
                 if (this.diamonds) {
-                    const time = Date.now() * 0.0008; 
+                    const time = Date.now() * 0.0008;
                     this.diamonds.forEach(group => {
                         const pulse = Math.sin(time * 2.5 + group.userData.phase) * 0.5 + 0.5;
                         const hue = (time * 0.06 + group.userData.colorSeed) % 1;
-                        
                         group.userData.gemMeshes.forEach(mesh => {
-                            // 明度压低至 0.04，沉淀出重彩深色基底
                             mesh.material.color.setHSL(hue, 1.0, 0.04);
-                            // 自发光明度锁定 0.15，保持由内而外的深邃幽光
                             mesh.material.emissive.setHSL(hue, 1.0, 0.15);
                             mesh.material.emissiveIntensity = 0.3 + pulse * 0.4;
                         });
@@ -946,7 +1072,7 @@
             }
         }
 
-        const game = new MechanicalTetrahedronPuzzle();
+        const game = new DualModeTetrahedronPuzzle();
     </script>
 </body>
 </html>
